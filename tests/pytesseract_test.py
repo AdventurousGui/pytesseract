@@ -286,10 +286,15 @@ def test_run_and_get_multiple_output(test_file, function_mapping, extensions):
     ],
 )
 def test_run_and_get_multiple_output_with_config(
-    test_file, function_mapping, extensions, config,
+    test_file,
+    function_mapping,
+    extensions,
+    config,
 ):
     compound_results = run_and_get_multiple_output(
-        test_file, extensions=extensions, config=config,
+        test_file,
+        extensions=extensions,
+        config=config,
     )
     for result, extension in zip(compound_results, extensions):
         if extension == 'pdf':
@@ -301,7 +306,8 @@ def test_run_and_get_multiple_output_with_config(
             )
         else:
             assert result == function_mapping[extension](
-                test_file, config=config,
+                test_file,
+                config=config,
             )
 
 
