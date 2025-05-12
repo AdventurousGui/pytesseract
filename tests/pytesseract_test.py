@@ -285,21 +285,24 @@ def test_run_and_get_multiple_output(test_file, function_mapping, extensions):
         (['pdf', 'txt'], '--dpi 300 --oem 3 --psm 6'),
     ],
 )
-def test_run_and_get_multiple_output_with_config(test_file, function_mapping, extensions, config):
+def test_run_and_get_multiple_output_with_config(
+    test_file, function_mapping, extensions, config,
+):
     compound_results = run_and_get_multiple_output(
-        test_file,
-        extensions=extensions,
-        config=config
+        test_file, extensions=extensions, config=config,
     )
     for result, extension in zip(compound_results, extensions):
         if extension == 'pdf':
             # pdf creation time could be different between the two so do not
             # check the whole string
             assert (
-                    result[:1000] == function_mapping[extension](test_file, config=config)[:1000]
+                result[:1000]
+                == function_mapping[extension](test_file, config=config)[:1000]
             )
         else:
-            assert result == function_mapping[extension](test_file, config=config)
+            assert result == function_mapping[extension](
+                test_file, config=config,
+            )
 
 
 @pytest.mark.skipif(
