@@ -86,6 +86,7 @@ def function_mapping():
         'box': image_to_boxes,
         'hocr': partial(image_to_pdf_or_hocr, extension='hocr'),
         'tsv': image_to_data,
+        'xml': image_to_alto_xml,
     }
 
 
@@ -246,7 +247,7 @@ def test_image_to_pdf_or_hocr(test_file, extension):
 @pytest.mark.parametrize(
     'extensions',
     [
-        ['tsv', 'pdf', 'txt', 'box', 'hocr'],
+        ['xml', 'tsv', 'pdf', 'txt', 'box', 'hocr'],
         # This tests a case where the extensions do not add any config params
         # Here this test is not merged with the test above because we might get
         # into a racing condition where test results from different parameter

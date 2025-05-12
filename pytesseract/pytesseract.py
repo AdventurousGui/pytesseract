@@ -323,7 +323,7 @@ def run_and_get_multiple_output(
         return [
             _read_output(
                 f"{kwargs['output_filename_base']}{extsep}{extension}",
-                True if extension in {'pdf', 'hocr'} else return_bytes,
+                True if extension in {'pdf', 'hocr', 'xml'} else return_bytes,
             )
             for extension in extensions
         ]
