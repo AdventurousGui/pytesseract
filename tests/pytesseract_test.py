@@ -248,6 +248,10 @@ def test_image_to_pdf_or_hocr(test_file, extension):
     'extensions',
     [
         ['xml', 'tsv', 'pdf', 'txt', 'box', 'hocr'],
+        # This tests a case in which listing 'box' before 'tsv' or 'xml' adds
+        # configfiles to the config string, which prevents tsv and xml from being
+        # generated if their parameters are not preceded by "-c"
+        ['box', 'tsv', 'xml'],
         # This tests a case where the extensions do not add any config params
         # Here this test is not merged with the test above because we might get
         # into a racing condition where test results from different parameter
@@ -269,6 +273,33 @@ def test_run_and_get_multiple_output(test_file, function_mapping, extensions):
             )
         else:
             assert result == function_mapping[extension](test_file)
+
+
+@pytest.mark.parametrize(
+    'extensions,config',
+    [
+        (['tsv', 'pdf', 'txt', 'box', 'hocr'], '--dpi 300 --oem 3 --psm 6'),
+        (['box', 'hocr', 'tsv', 'txt'], '--dpi 300 --oem 3 --psm 6'),
+        # This tests a case where the extensions do not add any config params, as in
+        # the test for the same function without passing 'config'
+        (['pdf', 'txt'], '--dpi 300 --oem 3 --psm 6'),
+    ],
+)
+def test_run_and_get_multiple_output_with_config(test_file, function_mapping, extensions, config):
+    compound_results = run_and_get_multiple_output(
+        test_file,
+        extensions=extensions,
+        config=config
+    )
+    for result, extension in zip(compound_results, extensions):
+        if extension == 'pdf':
+            # pdf creation time could be different between the two so do not
+            # check the whole string
+            assert (
+                    result[:1000] == function_mapping[extension](test_file, config=config)[:1000]
+            )
+        else:
+            assert result == function_mapping[extension](test_file, config=config)
 
 
 @pytest.mark.skipif(
